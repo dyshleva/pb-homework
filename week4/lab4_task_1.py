@@ -1,5 +1,13 @@
+"""
+Lab 4 task 1 submission
+"""
+
 # [1, 5, 6, 7, 12, 14, 17, 18, 22, 23, 24, 27]
 def get_number():
+    """
+    Get number
+    Yes, the doc for this is needed too
+    """
     number = 72
     return number
 
@@ -30,6 +38,8 @@ def get_position(ch: str) -> int:
     >>> get_position('Dj')
 
     """
+    if not isinstance(ch, str):
+        return None
     if len(ch) == 1:
         return ord(ch.upper()) - 64
     return None
@@ -65,9 +75,9 @@ def type_by_sides(a: float, b: float, c: float) -> str:
 
     if sum(map(lambda x: x**2, sides)) < max_side**2:
         return "obtuse triangle"
-    elif sum(map(lambda x: x**2, sides)) == max_side**2:
+    if sum(map(lambda x: x**2, sides)) == max_side**2:
         return "right angled triangle"
-    elif sum(map(lambda x: x**2, sides)) > max_side**2:
+    if sum(map(lambda x: x**2, sides)) > max_side**2:
         return "acute triangle"
     return None
 
@@ -85,16 +95,16 @@ def remove_spaces(s: str) -> str:
     :rtype: str: processde string
 
     >>> remove_spaces("I'll make     him an     offer he can't refuse.")
-    I'll make him an offer he can't refuse.
+    "I'll make him an offer he can't refuse."
     >>> remove_spaces("Great    men     are    not born great, they grow great...")
-    Great men are not born great, they grow great...
+    'Great men are not born great, they grow great...'
     >>> remove_spaces(2015)
 
     """
     if not isinstance(s, str):
         return None
 
-    print(" ".join(s.split()))
+    return ' '.join(s.split())
 
 
 # ****************************************
@@ -167,16 +177,16 @@ def exclude_letters(s1: str, s2: str) -> str:
     :rtype: str: parsed string
 
     >>> exclude_letters("aaabb", "b")
-    aaa
+    'aaa'
     >>> exclude_letters("abcc", "cczzyy")
-    ab
+    'ab'
     >>> exclude_letters(2015, "sasd")
 
     """
     if not isinstance(s1, str) or not isinstance(s2, str):
         return None
 
-    print("".join(filter(lambda x: x not in s2, s1)))
+    return "".join(filter(lambda x: x not in s2 or not x.isalpha(), s1))
 
 
 # ****************************************
@@ -192,16 +202,16 @@ def get_letters(n: int) -> str:
     >>> get_letters(0)
 
     >>> get_letters(1)
-    a
+    'a'
     >>> get_letters(-2015)
 
     """
-    if n < 1:
+    if not isinstance(n, int) or n < 1:
         return None
-    letters = [chr(x) for x in range(97, 123)]
-    res = [letters[x % 26] for x in range(n)]
 
-    print("".join(res))
+    letters = [chr(x) for x in range(97, 123)]
+
+    return ''.join(letters[0:n])
 
 
 # ****************************************
@@ -225,6 +235,8 @@ def number_of_occurence(lst: list, s: str) -> int:
     >>> number_of_occurence([1, 2, 2015, 1, 3], "1")
 
     """
+    if not isinstance(lst, list):
+        return None
     for _ in lst:
         if not isinstance(_, str):
             return None
@@ -271,31 +283,34 @@ def pattern_number(sequence: list) -> tuple:
 
     :rtype: tuple: pair of occurence and number or occurences
     >>> pattern_number([])
-    None
+
     >>> pattern_number([42])
-    None
+
     >>> pattern_number([1,2])
-    None
+
     >>> pattern_number([1,1])
     ([1], 2)
     >>> pattern_number([1,2,1])
-    None
+
     >>> pattern_number([1,2,3,1,2,3])
     ([1, 2, 3], 2)
     >>> pattern_number([1,2,3,1,2])
-    None
+
     >>> pattern_number([1,2,3,1,2,3,1])
-    None
+
     >>> pattern_number(list(range(10))*20)
-    ([0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 20)
+    ([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9,\
+ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8,\
+ 9, 0, 1,\
+ 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3,\
+ 4, 5, 6, 7, 8, 9], 2)
     >>> pattern_number('мама')
     ('ма', 2)
     >>> pattern_number('барабан')
-    None
+
     """
 
     if len(sequence) <= 1:
-        print(None)
         return None
 
     final = None
@@ -305,14 +320,13 @@ def pattern_number(sequence: list) -> tuple:
         if (
             res is not None
             and res * int(len(sequence) / len(res)) == sequence
-            and len(res) < 12
         ):
             result = [res, len(sequence) // i]
 
     if result[0] is not None:
         final = (result[0], result[1])
 
-    print(final)
+    return final
 
 
 # ****************************************
@@ -388,7 +402,6 @@ def numbers_Ulam(n: int) -> list:
                     break
             if count > 1:
                 break
-
         if count == 1:
             ulam.append(i)
 
@@ -422,7 +435,6 @@ def turn_over(n: int, lst: list) -> list:
     """
     if not 0 <= n <= len(lst):
         return []
-
     return list(reversed(lst[0:n])) + lst[n:]
 
 
