@@ -2,6 +2,7 @@
 Lab work for discrete maths
 """
 
+
 def filter_by(key, functor, lst):
     """
     (b, ((a -> b) ⇒ [a])) ⇒ [a]
@@ -43,10 +44,11 @@ def combine(lst_fst, lst_snd):
     return [
         (
             [pair_fst[0] for pair_fst in filter_by(key, lambda pair: pair[1], lst_fst)],
-            [pair_snd[1] for pair_snd in filter_by(key, lambda pair: pair[1], lst_snd)],
+            [pair_snd[1] for pair_snd in filter_by(key, lambda pair: pair[0], lst_snd)],
         )
         for key in {pair[1] for pair in lst_fst}
     ]
+
 
 def cartesian(lst_fst, lst_snd):
     """
@@ -76,7 +78,4 @@ def compose(lst_fst, lst_snd):
     >>> compose([(1,2), (2,1), (2,2)], [(1,2), (2,1)])
     [(2, 1), (1, 2), (2, 2)]
     """
-    return [
-            y for x in combine(lst_fst, lst_snd)
-                for y in cartesian(x[0], x[1])
-            ]
+    return [y for x in combine(lst_fst, lst_snd) for y in cartesian(x[0], x[1])]
