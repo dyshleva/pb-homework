@@ -2,80 +2,78 @@
 Lab work for discrete maths
 """
 
+from copy import deepcopy
 
-def filter_by(key, functor, lst):
+def symmetric_closure(init: list[list[int]]) -> list[list[int]]:
     """
-    (b, ((a -> b) ⇒ [a])) ⇒ [a]
-    Filter list of pairs into list of objects, grouped by key
+    Make a symmetric closure of a boolean atrix
 
     Args:
-        key: key to be filtered with
-        functor: function from pair to object (fst or snd or some conversion)
-                 (it IS a functor tbh)
-        lst: list of pairs
+        init: a square boolean (int) matrix
 
     Returns:
-        [a]: list of objects
-    >>> filter_by(1, lambda x: x[0], [(1, 1), (1, 2), (2, 3)])
-    [(1, 1), (1, 2)]
-    >>> filter_by(1, lambda x: x[1], [(1, 1), (1, 2), (3, 1)])
-    [(1, 1), (3, 1)]
+        list[list[int]]: a square boolean (int) matrix
     """
-    return list(filter(lambda x: functor(x) == key, lst))
+    assert all(len(init) == len(x) for x in init)
+    res = deepcopy(init)
+    for i in range(len(res)):
+        for j in range(len(res)):
+            res[i][j] = res[i][j] or res[j][i]
 
+    return res
 
-def combine(lst_fst, lst_snd):
+def reflexive_closure(init: list[list[int]]) -> list[list[int]]:
     """
-    ([(a,b)], [(b,c)]) ⇒ [([a], [c])]
-    Combine two lists with filter_by
+    Make a reflexive closure of a boolean atrix
 
     Args:
-        lst_fst: list of type [(a,b)]
-        lst_snd: list of type [(b,c)]
+        init: a square boolean (int) matrix
 
     Returns:
-        [([a], [c])]: list of pairs of lists, such that
-                      ∀ ([a], [c]) ϵ [([a], [c])]
-                      ∀ a₁, c₁ ϵ ([a], [c])
-                      ∃ b₁ : (a₁, b₁) ϵ [(a, b)] and (b₁, c₁) ϵ [(b, c)]
-    >>> combine([(1, 1), (2, 2)], [(1,2), (2, 1)])
-    [([1], [1]), ([2], [2])]
+        list[list[int]]: a square boolean (int) matrix
     """
-    return [
-        (
-            [pair_fst[0] for pair_fst in filter_by(key, lambda pair: pair[1], lst_fst)],
-            [pair_snd[1] for pair_snd in filter_by(key, lambda pair: pair[0], lst_snd)],
-        )
-        for key in {pair[1] for pair in lst_fst}
-    ]
+    assert all(len(init) == len(x) for x in init)
+    res = deepcopy(init)
+    for i in range(len(res)):
+        for j in range(len(res)):
+            res[i][j] = res[i][j] or int(i == j)
 
+    return res
 
-def cartesian(lst_fst, lst_snd):
+def transitive_closure(init: list[list[int]]) -> list[list[int]]:
     """
-    Make a cartesian product of two lists
-    Args:
-        lst_fst: first list
-        lst_snd: second list
-    Returns:
-        list: a cartesian product of two lists
-    >>> cartesian([1,2], [1])
-    [(1, 1), (2, 1)]
-    """
-    return [(x, y) for x in lst_fst for y in lst_snd]
-
-
-def compose(lst_fst, lst_snd):
-    """
-    ([(a,b)], [(b,c)]) ⇒ [(a,c)]
-    Compose two relations in the representation of the list of pairs
+    Warshall algorithm implementation for a square matrix
 
     Args:
-        lst_fst: first relation
-        lst_snd: second_relation
+        init: a square boolean (int) matrix
 
     Returns:
-        [(a, c)]: a composition of two relations
-    >>> compose([(1,2), (2,1), (2,2)], [(1,2), (2,1)])
-    [(2, 1), (1, 2), (2, 2)]
+        list[list[int]]: a square boolean (int) matrix
     """
-    return [y for x in combine(lst_fst, lst_snd) for y in cartesian(x[0], x[1])]
+    assert all(len(init) == len(x) for x in init)
+    res = deepcopy(init)
+    for k in range(len(res)):
+        for i in range(len(res)):
+            for j in range(len(res)):
+                res[i][j] = res[i][j] or (res[i][k] and res[k][j])
+
+    return res
+
+def transitive_check(matrix: list[list[int]]) -> list[list[int]]:
+    """
+    Check matrix for it's transitivity
+
+    Args:
+        matrix: a square boolean matrix to bo checked
+
+    Returns:
+        bool: whether a matrix is transitive
+    """
+    assert all(len(init) == len(x) for x in init)
+    res = deepcopy(matrix)
+    res = transitive_closure(res)
+    for i in range(len(res)):
+        for j in range(len(res)):
+            if res[i][j] == 1 and matrix[i][j] == 0:
+                return False
+    return True

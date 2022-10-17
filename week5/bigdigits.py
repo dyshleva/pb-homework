@@ -8,8 +8,8 @@ import sys
 
 def return_digits(number:str) -> [str]:
     """
-    Create a list of strings.
-    When concatenated with newlines, makes a list of
+    Create a list of strings concatenated with newlines,
+    it makes a list of
     numbers made of these numbers
     Args:
         number: the number to be transformed
@@ -52,4 +52,3 @@ except IndexError:
     print("usage: bigdigits.py <number>")
 except ValueError as err:
     print(err, "in", digits)
-
