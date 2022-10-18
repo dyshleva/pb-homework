@@ -112,7 +112,17 @@ def symmetric_check(matrix: list[list[int]] = None) -> list[list[int]]:
                 return False
     return True
 
-def equivalence_class(matrix):
+def equivalence_class(matrix: list[list[int]]) -> dict[str: list[int]]:
+    """
+    Create a dictionaary with equivalence classes
+
+    Args:
+        matrix: a boolean (int) matrix
+
+    Returns:
+        dict[str: list[int]]: a dictionary with the equivalenc elist turned to string as a key,
+            and list of matric row indexes as objects
+    """
     assert symmetric_check(matrix) and reflexive_check(matrix) and transitive_check(matrix)
     result = {}
     for j, item in enumerate(matrix):
@@ -122,7 +132,17 @@ def equivalence_class(matrix):
             result[str(item)] = [j]
     return result
 
-def bruteforce_transitives(set_length):
+def bruteforce_transitives(set_length: int) -> int:
+    """
+    Calculate all possible transitive relations for a set with n elements
+    Sowwy, nothing but bruteforce works
+
+    Args:
+        set_length: length of the said set
+
+    Returns:
+        int: number of all possible transitive relations
+    """
     cartesian = [(x, y) for x in range(set_length) for y in range(set_length)]
 
     relations = [[]]
