@@ -17,5 +17,5 @@ compose lst_fst lst_snd =
 
 main :: IO ()
 main = do
-    print $ compose $ combine [(x,x+1) | x <- [1..7]] [(x, x+1) | x <- [3..8]]
+    print $ compose [(x,x+1) | x <- [1..7]] [(x, x+1) | x <- [3..8]]
     print $ compose [(1, 1)] [(2, 2), (1, 1)]
