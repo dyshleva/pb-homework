@@ -110,6 +110,6 @@ def transitive_check(matrix: Matrix) -> Matrix:
     res = transitive_closure(res)
     for i in range(res.size):
         for j in range(res.size):
-            if res[i, j] == 1 and matrix[i, j] == 0:
+            if res[i, j] and not matrix[i, j]:
                 return False
     return True
