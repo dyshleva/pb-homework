@@ -3,6 +3,7 @@ Lab work for discrete maths
 """
 
 from copy import deepcopy
+from itertools import combinations
 
 def symmetric_closure(init: list[list[int]] = None) -> list[list[int]]:
     """
@@ -71,7 +72,7 @@ def transitive_check(matrix: list[list[int]] = None) -> list[list[int]]:
     Returns:
         bool: whether a matrix is transitive
     """
-    assert all(len(init) == len(x) for x in init) and init is not None
+    assert all(len(matrix) == len(x) for x in matrix) and matrix is not None
     res = deepcopy(matrix)
     res = transitive_closure(res)
     return res == matrix
@@ -86,8 +87,8 @@ def reflexive_check(matrix: list[list[int]] = None) -> list[list[int]]:
     Returns:
         bool: whether a matrix is reflexive
     """
-    assert all(len(init) == len(x) for x in init) and init is not None
-    matrix_size = len(res)
+    assert all(len(matrix) == len(x) for x in matrix) and matrix is not None
+    matrix_size = len(matrix)
     for i in range(matrix_size):
         if not matrix[i][i]:
             return False
@@ -103,10 +104,44 @@ def symmetric_check(matrix: list[list[int]] = None) -> list[list[int]]:
     Returns:
         bool: whether a matrix is symmetric
     """
-    assert all(len(init) == len(x) for x in init) and init is not None
-    matrix_size = len(res)
+    assert all(len(matrix) == len(x) for x in matrix) and matrix is not None
+    matrix_size = len(matrix)
     for i in range(matrix_size):
         for j in range(matrix_size):
             if matrix[i][j] != matrix[j][i]:
                 return False
     return True
+
+def equivalence_class(matrix):
+    assert symmetric_check(matrix) and reflexive_check(matrix) and transitive_check(matrix)
+    result = {}
+    for j, item in enumerate(matrix):
+        if result.get(str(item)) is not None:
+            result[str(item)].append(j)
+        else:
+            result[str(item)] = [j]
+    return result
+
+def bruteforce_transitives(set_length):
+    cartesian = [(x, y) for x in range(set_length) for y in range(set_length)]
+
+    relations = [[]]
+
+    for i in range(1, set_length+1):
+        for comb in combinations(cartesian, i):
+            relations.append(list(comb))
+
+    matrixes = []
+    for i in relations:
+        matrix = [[0 for i in range(set_length)] for j in range(set_length)]
+        for x, y in i:
+            matrix[x][y] = 1
+        matrixes.append(matrix)
+
+    result = []
+
+    for matrix in matrixes:
+        if transitive_check(matrix):
+            result.append(matrix)
+
+    return len(matrixes)
