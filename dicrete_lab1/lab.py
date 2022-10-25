@@ -55,9 +55,9 @@ def transitive_closure(init: list[list[int]] = None) -> list[list[int]]:
     assert all(len(init) == len(x) for x in init) and init is not None
     res = deepcopy(init)
     matrix_size = len(res)
-    for k in range(matrix_size):
-        for i in range(matrix_size):
-            for j in range(matrix_size):
+    for i in range(matrix_size):
+        for j in range(matrix_size):
+            for k in range(matrix_size):
                 res[i][j] = res[i][j] or (res[i][k] and res[k][j])
 
     return res
@@ -124,7 +124,7 @@ def equivalence_class(matrix: list[list[int]]) -> dict[str: list[int]]:
             and list of matric row indexes as objects
     """
     matrix = transitive_closure(symmetric_closure(reflexive_closure(matrix)))
-    result = [[it for it, el in enumerate(row) if el] for row in matrixes]
+    result = [[it for it, el in enumerate(row) if el] for row in matrix]
     return set(result)
 
 def bruteforce_transitives(set_length: int) -> int:
@@ -140,9 +140,9 @@ def bruteforce_transitives(set_length: int) -> int:
     """
     cartesian = [(x, y) for x in range(set_length) for y in range(set_length)]
 
-    relations = [[]]
+    relations = []
 
-    for i in range(1, set_length+1):
+    for i in range(len(cartesian)+1):
         for comb in combinations(cartesian, i):
             relations.append(list(comb))
 
@@ -156,7 +156,16 @@ def bruteforce_transitives(set_length: int) -> int:
     result = []
 
     for matrix in matrixes:
-        if transitive_check(matrix):
+        if transitive_check(matrix) and matrix not in result:
             result.append(matrix)
 
     return len(matrixes)
+
+def read_file(file_name: str) -> list[list[int]]:
+    with open(file_name, "r") as file:
+        matrix = [[int(char) for char in row.strip()] for row in file.readlines()]
+    return matrix
+
+def write_file(file_name: str, matrix: list[list[int]]) -> None:
+    with open(file_name, "w") as infile:
+        infile.writelines(''.join(row) for row in matrix)

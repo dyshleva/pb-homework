@@ -65,3 +65,4 @@ def calculate_expression(expression):
 
 
     return int(number_queue[0])
+
