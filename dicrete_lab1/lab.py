@@ -162,10 +162,26 @@ def bruteforce_transitives(set_length: int) -> int:
     return len(matrixes)
 
 def read_file(file_name: str) -> list[list[int]]:
+    """
+    Read file into a matrix
+
+    Args:
+        file_name: filename to read out of
+
+    Returns:
+        list[list[int]]: a boolean (int) matrix
+    """
     with open(file_name, "r") as file:
         matrix = [[int(char) for char in row.strip()] for row in file.readlines()]
     return matrix
 
 def write_file(file_name: str, matrix: list[list[int]]) -> None:
+    """
+    Write a matrix to file
+
+    Args:
+        file_name: filename to write to
+        matrix: a matrix
+    """
     with open(file_name, "w") as infile:
         infile.writelines(''.join(row) for row in matrix)
