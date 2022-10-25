@@ -123,14 +123,9 @@ def equivalence_class(matrix: list[list[int]]) -> dict[str: list[int]]:
         dict[str: list[int]]: a dictionary with the equivalenc elist turned to string as a key,
             and list of matric row indexes as objects
     """
-    assert symmetric_check(matrix) and reflexive_check(matrix) and transitive_check(matrix)
-    result = {}
-    for j, item in enumerate(matrix):
-        if result.get(str(item)) is not None:
-            result[str(item)].append(j)
-        else:
-            result[str(item)] = [j]
-    return result
+    matrix = transitive_closure(symmetric_closure(reflexive_closure(matrix)))
+    result = [[it for it, el in enumerate(row) if el] for row in matrixes]
+    return set(result)
 
 def bruteforce_transitives(set_length: int) -> int:
     """
