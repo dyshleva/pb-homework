@@ -146,20 +146,15 @@ def bruteforce_transitives(set_length: int) -> int:
         for comb in combinations(cartesian, i):
             relations.append(list(comb))
 
-    matrixes = []
+    result = 0
     for i in relations:
         matrix = [[0 for i in range(set_length)] for j in range(set_length)]
         for x, y in i:
             matrix[x][y] = 1
-        matrixes.append(matrix)
+        if transitive_check(matrix):
+            result += 1
 
-    result = []
-
-    for matrix in matrixes:
-        if transitive_check(matrix) and matrix not in result:
-            result.append(matrix)
-
-    return len(matrixes)
+    return result
 
 def read_file(file_name: str) -> list[list[int]]:
     """
@@ -185,3 +180,21 @@ def write_file(file_name: str, matrix: list[list[int]]) -> None:
     """
     with open(file_name, "w") as infile:
         infile.writelines(''.join(row) for row in matrix)
+
+def write_list(file_name: str, in_set: list[list[int]]) -> None:
+    """
+    Write a set to file
+
+    Args:
+        file_name: filename to write to
+        in_set: a set
+    """
+    with open(file_name, "w") as infile:
+        infile.writeline(str(in_set))
+
+def main():
+    base = read_file("base.txt")
+    write_file("transitive_closure.txt", transitive_closure(base))
+    write_file("reflexive_closure.txt", reflexive_closure(base))
+    write_file("symmetric_closure.txt", symmetric_closure(base))
+    write_list("equality_class_division.txt", equivalence_class(base))
