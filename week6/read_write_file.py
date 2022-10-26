@@ -31,14 +31,15 @@ def read_input_file(url: str, number: int) -> List[List[str]]:
                 not line.decode('utf-8').startswith('—'):
                 lst.append(line.strip().decode('utf-8'))
 
-    lst = list(filter(lambda x: 'До' in x or 'Середній' in x, lst))
+    lst = list(filter(lambda x: 'До' in x or 'Середній' in x or 'контракт' in x, lst))
     res = []
     for i in range(0, len(lst), 2):
         if not lst[i].startswith('С'):
             student_formatted = [
                     lst[i].split()[0],
             f"{lst[i].split()[1]} {lst[i].split()[2]} {lst[i].split()[3]}",
-                    '+',
+                    '+' if lst[i].split()[4] == "До"\
+                            else "-",#"Рекомендовано (контракт)",
                     lst[i].split()[6],
                     lst[i+1].split()[-1]
                 ]
@@ -59,6 +60,5 @@ def write_csv_file(url: str):
 
     """
     with open("total.csv", 'w', encoding='utf-8') as outfile:
-        outfile.write("№,ПІБ,Д,Заг.бал,С.б.док.осв.")
-        for line in read_input_file(url,1000):
-            outfile.write(','.join(line))
+        outfile.write("№,ПІБ,Д,Заг.бал,С.б.док.осв.\n")
+        outfile.writelines(','.join(line) + '\n' for line in read_input_file(url, 100000))
