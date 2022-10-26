@@ -31,19 +31,21 @@ def get_words(infile: str, letters: List[str]) -> List[str]:
     """
     Reads the file infile. Checks the words with rules and returns a list of words.
     """
-    lst = []
     center = letters[len(letters)//2]
-    with open(infile, "r", encoding="utf-8") as file:
-        for line in file:
-            flag = line.strip() not in lst
+    with open(infile, 'r') as inf:
+        result = {x.strip().lower() for x in inf.readlines()[2:]}
 
-            for letter in line.strip():
-                flag = letter in letters and line.strip().count(letter) == 1 and flag
+    res = []
+    for word in result:
+        flag = len(word) >= 4 and center in word
+        for letter in set(word):
+            flag = letter in letters\
+                    and word.count(letter) <= letters.count(letter)\
+                    and flag
+        if flag:
+            res.append(word)
 
-            if flag and line.strip():
-                lst.append(line.strip())
-
-    return list(filter(lambda x: center in x and len(x)>=4, lst))
+    return sorted(res)
 
 
 def get_user_words() -> List[str]:
@@ -74,7 +76,7 @@ def get_pure_user_words(
                 not word in words_from_dict and\
                 not word in result
         for letter in word:
-            flag = letter in letters and word.count(letter) == 1 and flag
+            flag = letter in letters and word.count(letter) <= letters.count(letter) and flag
 
         if flag:
             result.append(word)
