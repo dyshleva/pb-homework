@@ -28,7 +28,7 @@ def get_words(infile: str, letters: List[str]) -> List[Tuple[str]]:
     Reads the file infile. Checks the words with rules and returns a list of words.
     """
     lst = []
-    center = letters[4]
+    center = letters[len(letters)//2]
     with open(infile, "r", encoding="utf-8") as file:
         for line in file:
             flag = line.strip() and\

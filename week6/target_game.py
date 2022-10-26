@@ -32,12 +32,10 @@ def get_words(infile: str, letters: List[str]) -> List[str]:
     Reads the file infile. Checks the words with rules and returns a list of words.
     """
     lst = []
-    center = letters[4]
+    center = letters[len(letters)//2]
     with open(infile, "r", encoding="utf-8") as file:
         for line in file:
-            flag = len(line.strip()) >= 4 and\
-                center in line.strip() and\
-                line.strip() not in lst
+            flag = line.strip() not in lst
 
             for letter in line.strip():
                 flag = letter in letters and line.strip().count(letter) == 1 and flag
@@ -45,7 +43,7 @@ def get_words(infile: str, letters: List[str]) -> List[str]:
             if flag and line.strip():
                 lst.append(line.strip())
 
-    return sorted(lst)
+    return list(filter(lambda x: center in x and len(x)>=4, lst))
 
 
 def get_user_words() -> List[str]:

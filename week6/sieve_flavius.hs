@@ -13,4 +13,5 @@ sieve len = (\(x,y) -> x ++ y) $
         takeWhile (\(y1, y2) -> (not . null) y2) $
             iterate (\(y1, y2) -> rm (head y2) (y1++y2)) ([1], [2..len])
 
-main = (fmap sieve $ fmap (\x -> read x :: Int) getLine) >>= print
+-- main = (fmap sieve $ fmap (\x -> read x :: Int) getLine) >>= print
+main = print $ sieve (10^7)
