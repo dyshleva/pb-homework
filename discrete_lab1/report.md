@@ -1,6 +1,15 @@
 # Report for discrete maths lab work
 *For more detailed documentation, check the code's documentation*
 
+**The function reads from `base.txt` and writes to**
+- `transitive_closure.txt`
+- `symmetric_closure.txt`
+- `reflexive_closure.txt`
+- `equality_class_division.txt`
+
+
+*Should there occur any problem with the code, please contact Petro Mozil <mozil.petryk@gmail.com>*
+
 For the lab work, we used python, which is counterproductive.
 
 ### The functions are as such:

@@ -198,3 +198,6 @@ def main():
     write_file("reflexive_closure.txt", reflexive_closure(base))
     write_file("symmetric_closure.txt", symmetric_closure(base))
     write_list("equality_class_division.txt", equivalence_class(base))
+
+if __name__ == "__main__":
+    main()
