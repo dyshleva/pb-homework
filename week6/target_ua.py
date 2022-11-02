@@ -6,21 +6,21 @@ from typing import List, Tuple
 import re
 from random import choice
 
-ua_alphabet = "абвгґдеєжзиіїйклмнопрстуфхцчшщьюя"
+UA_ALPHABET = "абвгґдеєжзиіїйклмнопрстуфхцчшщьюя"
 
 def generate_grid() -> List[List[str]]:
     """
     Generates list of lists of letters - i.e. grid for the game.
     """
-    grid = "     "
+    grid = [" ", " ", " ", " ", " "]
     i = 0
     while not all(x != " " for x in grid):
-        letter = choice(ua_alphabet)
+        letter = choice(UA_ALPHABET)
         if not any(letter in row for row in grid):
             grid[i] = letter
         i += 1
 
-    return grid
+    return "".join(grid)
 
 
 def get_words(infile: str, letters: List[str]) -> List[Tuple[str]]:
@@ -33,7 +33,8 @@ def get_words(infile: str, letters: List[str]) -> List[Tuple[str]]:
         for line in file:
             flag = line.strip() and\
                     len(line.strip().split()[0]) <= 5 and\
-                    line[0] in letters
+                    line[0] in letters and\
+                    center in line.strip()
 
             part = ''
 
@@ -46,7 +47,7 @@ def get_words(infile: str, letters: List[str]) -> List[Tuple[str]]:
             if re.match('.*(adv).*', line):
                 part = 'adverb'
             if flag and part:
-                lst.append((line.strip().split[0], part))
+                lst.append((line.strip().split()[0], part))
 
     return lst
 
@@ -72,7 +73,7 @@ def check_user_words(
     """
     result = []
     center = letters[4]
-    proper_words = [word[0] if word[1] == language_part for word in dict_of_words]
+    proper_words = [word[0] for word in dict_of_words if word[1] == language_part]
     for word in user_words:
         flag = len(word) <= 5 and\
                 center in word and\
@@ -103,7 +104,7 @@ Please enter all the words you ca think of that consist of thos letters:
     print(letters)
     words = get_user_words()
     file_words = get_words("en", letters)
-    pure_words = get_pure_user_words(words, letters, file_words)
+    pure_words = check_user_words(words, "adverb", letters, file_words)
 
     print("Yay! you've entered the words! Here are all the words you got from the dictionary:")
     print("\n".join(map(lambda x: f"- {x}", pure_words)))

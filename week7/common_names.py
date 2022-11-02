@@ -16,9 +16,9 @@ def names_read(file_name: str) -> Set[str]:
     Returns:
         Set[str]: a set of the file's lines
     """
-    with open(file_name, "w", encoding="utf-8") as infile:
-        set = {name.strip() for name in infile.read().split("\n")}
-    return set
+    with open(file_name, "r", encoding="utf-8") as infile:
+        out_set = {name.strip() for name in infile.read().split("\n") if name.strip()}
+    return out_set
 
 
 def common_names(female_names: List[str], male_names: List[str]) -> Set[str]:
@@ -31,8 +31,8 @@ def common_names(female_names: List[str], male_names: List[str]) -> Set[str]:
     Returns:
         Set[str]: a sey intersection of two lists
 
-    >>> common_names(["Anna", "Irene", "Bellamy"], ["Bellamy", "John"])
-    {'Bellamy'}
+    >>> common_names(["Anna", "Irene", "Bellamy", "Anasui"], ["Bellamy", "John", "Anasui"])
+    {'Anasui'}
     """
 
     return set(
