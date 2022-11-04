@@ -2,7 +2,6 @@
 history_analysis submission
 """
 
-import datetime
 
 def sites_on_date(visits: list, date: str):
     """
@@ -11,11 +10,14 @@ def sites_on_date(visits: list, date: str):
     :param visits: all visits in browser history
     :param date: date in format "yyyy-mm-dd"
     :return: set of url visited on date
+    >>> sites_on_date([], "2022-11-11")
+    set()
     """
-    lst = filter(lambda search: search[2] == date, visits)
-    if lst is not None:
+    lst = list(filter(lambda search: search[2] == date, visits))
+    if lst != []:
         return set(map(lambda site: site[0], lst))
     return set()
+
 
 def most_frequent_sites(visits: list, number: int):
     """
@@ -24,7 +26,11 @@ def most_frequent_sites(visits: list, number: int):
     :param visits: all visits in browser history
     :param number: number of most frequent sites to return
     :return: set of most frequent sites
+    >>> most_frequent_sites([], 12)
+    set()
     """
+    if not visits:
+        return set()
     res_dct = {}
     for visit in visits:
         if visit[0] in res_dct:
@@ -33,17 +39,9 @@ def most_frequent_sites(visits: list, number: int):
             res_dct[visit[0]] = 1
 
     lst = list(res_dct.items())
-    lst = sorted(lst, lambda x: x[1])
+    lst = sorted(lst, key=lambda x: x[1])
+    lst = list(map(lambda x: x[0], lst))
     return set(lst[:number])
-
-def to_datetime(date: str):
-    """
-    Morph date string to datetime
-    """
-    day = date.split('-')[2]
-    month = date.split('-')[1]
-    year = date.split('-')[0]
-    return datetime.datetime(year, month, day)
 
 
 def get_url_info(visits: list, url: str):
@@ -58,13 +56,20 @@ def get_url_info(visits: list, url: str):
     :param visits: all visits in browser history
     :param url: url of site to search
     :return: (title, last_visit_date, last_visit_time, num_of_visits, average_time)
+    >>> get_url_info([], "https://reddit.com/")
+    set()
     """
-    lst = list(filter(lambda x: x[0] == url, visits))
+    if visits == []:
+        return set()
+    url = url + "/" if not url.endswith("/") else url
+    lst = list(filter(lambda x: url in x[0], visits))
+    if lst == []:
+        return set()
     title = lst[0][1]
-    avg_time = sum(map(lambda x: x[-1], lst))/len(lst)
-    last_visit = max(map(lambda x: datetime.datetime(x[2]), lst))
+    avg_time = sum(map(lambda x: x[-1], lst)) / len(lst)
+    last_visit = max(map(lambda x: int(x[2].replace("-", "")), lst))
     for visit in lst:
-        if to_datetime(visit[2]) == last_visit:
+        if visit[2].replace("-", "") == str(last_visit):
             visit_time = visit[3]
             visit_date = visit[2]
 
