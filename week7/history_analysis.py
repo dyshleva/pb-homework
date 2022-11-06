@@ -14,7 +14,7 @@ def sites_on_date(visits: list, date: str):
     set()
     """
     lst = list(filter(lambda search: search[2] == date, visits))
-    if lst != []:
+    if lst:
         return set(map(lambda site: site[0], lst))
     return set()
 
@@ -31,18 +31,16 @@ def most_frequent_sites(visits: list, number: int):
     """
     if not visits:
         return set()
-    res_dct = {}
+    res_dct = []
     for visit in visits:
-        if visit[0] in res_dct:
-            res_dct[visit[0]] += 1
-        else:
-            res_dct[visit[0]] = 1
-
-    lst = list(res_dct.items())
-    lst = sorted(lst, key=lambda x: x[1])
+        for i, visit_documented in enumerate(res_dct):
+            if visit[0] in visit_documented[0]:
+                res_dct[i][1] += 1
+            elif i == len(res_dct) - 1:
+                res_dct.append([visit[0], 1])
+    lst = sorted(res_dct, key=lambda x: x[1])
     lst = list(map(lambda x: x[0], lst))
     return set(lst[:number])
-
 
 def get_url_info(visits: list, url: str):
     """
@@ -58,19 +56,28 @@ def get_url_info(visits: list, url: str):
     :return: (title, last_visit_date, last_visit_time, num_of_visits, average_time)
     >>> get_url_info([], "https://reddit.com/")
     set()
-    >>> get_url_info([("https://reddit.com/", "Reddit", "2021-11-11", "11:11:11.111")], "https://reddit.com/")
+    >>> get_url_info([("https://reddit.com/", "Reddit", "2021-11-11", "11:11:11.111")],\
+"https://reddit.com/")
     ('Reddit', '2021-11-11', '11:11:11.111', 1, '11:11:11.111')
     """
     lst = list(filter(lambda x: url in x[0], visits))
-    if lst == []:
+    if not lst:
         return set()
     title = lst[0][1]
     last_visit = max(map(lambda x: int(x[2].replace("-", "")), lst))
-    time_tuples = list(map(lambda x: tuple(map(float, (x[3].split(':')))), lst))
-    average_time_tuple = tuple(map(lambda x: x / len(time_tuples), map(sum, zip(*time_tuples))))
+    time_tuples = list(map(lambda x: tuple(map(float, (x[3].split(":")))), lst))
+    avg_time_tuple = tuple(
+        map(lambda x: x / len(time_tuples), map(sum, zip(*time_tuples)))
+    )
     for visit in lst:
         if visit[2].replace("-", "") == str(last_visit):
             visit_time = visit[3]
             visit_date = visit[2]
 
-    return (title, visit_date, visit_time, len(lst), f'{average_time_tuple[0]:02.0f}:{average_time_tuple[1]:02.0f}:{average_time_tuple[2]:02.3f}')
+    return (
+        title,
+        visit_date,
+        visit_time,
+        len(lst),
+        f"{avg_time_tuple[0]:02.0f}:{avg_time_tuple[1]:02.0f}:{avg_time_tuple[2]:02.3f}",
+    )
