@@ -69,7 +69,7 @@ def compute_limit(seq):
             return round(res, 2)
         i += 1
 
-def compute_derivative(f, x_0):
+def compute_derivative(func, x_0):
     """
     (function or str, number) -> (number)
 
@@ -85,23 +85,23 @@ def compute_derivative(f, x_0):
     while True:
         dx = 10 ** (-i)
         x = x_0 + dx
-        if isinstance(f, str):
-            dF = eval(f)
+        if isinstance(func, str):
+            differential = eval(func)
             x = x_0
-            dF -= eval(f)
-        elif hasattr(f, '__call__'):
-            dF = f(x)
-            dF -= f(x_0)
+            differential -= eval(func)
+        elif hasattr(func, '__call__'):
+            differential = func(x)
+            differential -= func(x_0)
         else:
             raise ValueError
 
-        derrivative = dF/dx
+        derrivative = differential/dx
         lim.append(derrivative)
         if i > 0 and abs(lim[i] - lim[i - 1]) < 0.001 or i > 10**7:
             return round(derrivative, 2)
         i += 1
 
-def get_tangent(f, x_0):
+def get_tangent(func, x_0):
     """
     (function or str, number) -> (str)
 
@@ -116,14 +116,14 @@ def get_tangent(f, x_0):
     >>> get_tangent(lambda x: - x ** 2 + x, 2)
     '- 3.0 * x + 4.0'
     """
-    if isinstance(f, str):
+    if isinstance(func, str):
         x = x_0
-        val_at_point = eval(f)
-    elif hasattr(f, '__call__'):
-        val_at_point = f(x_0)
+        val_at_point = eval(func)
+    elif hasattr(func, '__call__'):
+        val_at_point = func(x_0)
     else:
         raise ValueError
-    coefficient = compute_derivative(f, x_0)
+    coefficient = compute_derivative(func, x_0)
     x = f"- {abs(coefficient)} * x" if coefficient < 0 else\
             f"{coefficient} * x"
     free_coeff = round((-1) * x_0 * coefficient + val_at_point, 2)
@@ -131,7 +131,7 @@ def get_tangent(f, x_0):
             f" + {free_coeff}" if free_coeff > 0 else ""
     return x + formatted_free_coeff
 
-def get_root(f, a, b):
+def get_root(func, a, b):
     """
     (function or str, number, number) -> (number)
 
@@ -146,14 +146,20 @@ def get_root(f, a, b):
 
     while abs(val_at_point) > 0.01:
         start = (a + b) /2
-        if isinstance(f, str):
+        if isinstance(func, str):
             x = start
-            val_at_point = eval(f)
-        elif hasattr(f, '__call__'):
-            val_at_point = f(start)
+            val_at_point = eval(func)
+            x = a
+            val_at_a = eval(func)
+            x = b
+            val_at_b = eval(func)
+        elif hasattr(func, '__call__'):
+            val_at_point = func(start)
+            val_at_a = func(a)
+            val_at_b = func(b)
         else:
             raise ValueError
-        a = start if val_at_point < 0 else a
-        b = start if val_at_point > 0 else b
+        a = start if (val_at_point*val_at_a) > 0 else a
+        b = start if (val_at_point*val_at_b) > 0 else b
 
     return round(start, 2)
