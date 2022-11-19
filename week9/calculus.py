@@ -65,7 +65,7 @@ def compute_limit(seq):
         else:
             raise ValueError
         lst.append(res)
-        if i > 1 and abs(lst[i-1] - lst[i-2]) < 0.01 or i > 10**7:
+        if i > 1 and abs(lst[i-1] - lst[i-2]) < 0.001 or i > 10**7:
             return round(res, 2)
         i += 1
 
